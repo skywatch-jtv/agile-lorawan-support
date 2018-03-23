@@ -1,0 +1,16 @@
+ARG TTN_IMAGE=ttn-armv7l:latest
+FROM $TTN_IMAGE
+
+COPY generated/broker.yml /etc/ttn/broker/ttn.yml
+COPY generated/discovery.cert /etc/ttn/broker/ca.cert
+COPY generated/networkserver.cert /etc/ttn/broker/networkserver.cert
+
+RUN cd /etc/ttn/broker; \
+ttn broker gen-keypair --config ./ttn.yml && \
+ttn broker gen-cert --config ./ttn.yml
+
+#ARG DEV_ADDR=26000000/20
+#RUN cd /etc/ttn/broker; \
+#ttn broker register-prefix $DEV_ADDR --config ./ttn.yml
+
+CMD ["broker", "--config", "/etc/ttn/broker/ttn.yml"]

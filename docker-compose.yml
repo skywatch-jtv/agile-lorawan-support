@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+  redis:
+    image: hypriot/rpi-redis
+    command: redis-server --appendonly yes
+    hostname: redis
+    #ports:
+    #  - "6379:6379" # Note: you should not expose this port in production environments
+    volumes:
+      - /redis-data
+
+  mosquitto:
+    image: sky-watch/mosquitto
+    build: ./mosquitto
+    restart: always
+    ports:
+      - "1883:1883"  # Note: your MQTT broker should use authentication in production environments
+      - "9001:9001"  # Note: you should not expose this port in production environments
+    environment:
+      MQTTNAUTH_CACHE_HOST: redis
+
+  pkt_forwarder:
+    image: sky-watch/pktforwarder
+    build: ./gateway/rpi-ttn-gateway
+    environment:
+      PI_RESET_PIN: 7
+      GATEWAY_EUI: "B827EBC3F5D1"
+      ROUTER_ADDR: "router.eu.thethings.network"
+      GATEWAY_LAT: 0
+      GATEWAY_LON: 0
+      GATEWAY_ALT: 0
+      GATEWAY_EMAIL: ""
+      GATEWAY_NAME: "agile-sky-watch"
+    network_mode: "host"
+    privileged: true
+
+  discovery:
+    image: thethingsnetwork/ttn:latest
+    command: discovery --config /etc/ttn/discovery/ttn.yml
+    depends_on:
+      - redis
+    networks:
+      default:
+        aliases:
+          - discovery.local.thethings.network
+    ports:
+      - "1900:1900"
+      - "8080:8080"
+    volumes:
+      - "./discovery:/etc/ttn/discovery"
+

@@ -1,0 +1,14 @@
+id: agile-router
+description: "TTN Router"
+tls: true
+key-dir: /etc/ttn/router/
+auth-servers:
+  ttn-account-v2: "https://account.thethingsnetwork.org"
+
+discovery-address: "discovery:1900"
+auth-token: ${DISCOVERY_ROUTER_ACCESS_TOKEN}
+
+router:
+  server-address-announce: agile-router
+  server-address-announce: localhost
+  skip-verify-gateway-token: true

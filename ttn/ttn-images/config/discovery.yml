@@ -1,0 +1,16 @@
+id: agile-discovery
+description: "TTN Discovery Server"
+tls: true
+key-dir: /etc/ttn/discovery/
+discovery-address: "localhost:1900"
+auth-servers:
+  ttn-account-v2: "https://account.thethingsnetwork.org"
+  local: "file:///etc/ttn/discovery/server.pub"
+
+discovery:
+  server-address-announce: agile-discover
+  redis-address: redis:6379
+  master-auth-servers:
+  - ttn-account-v2
+  - local
+

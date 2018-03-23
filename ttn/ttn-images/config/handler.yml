@@ -1,0 +1,15 @@
+id: agile-handler
+description: "TTN Handler Server"
+tls: true
+key-dir: /etc/ttn/handler/
+auth-servers:
+  ttn-account-v2: "https://account.thethingsnetwork.org"
+
+discovery-address: "discovery:1900"
+auth-token: ${DISCOVERY_HANDLER_ACCESS_TOKEN}
+
+handler:
+  server-address-announce: agile-handler
+  broker-id: agile-broker
+  mqtt-address: mosquitto:1883"
+  redis-address: "redis:6379"

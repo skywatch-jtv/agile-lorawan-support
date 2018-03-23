@@ -1,0 +1,10 @@
+ARG TTN_IMAGE=ttn-armv7l:latest
+FROM $TTN_IMAGE
+
+COPY config/discovery.yml /etc/ttn/discovery/ttn.yml
+
+RUN cd /etc/ttn/discovery; \
+ttn discovery gen-keypair --config ./ttn.yml && \
+ttn discovery gen-cert localhost --config ./ttn.yml
+
+CMD ["discovery", "--config", "/etc/ttn/discovery/ttn.yml"]

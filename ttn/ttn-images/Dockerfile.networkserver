@@ -1,0 +1,10 @@
+ARG TTN_IMAGE=ttn-armv7l:latest
+FROM $TTN_IMAGE
+
+COPY config/networkserver.yml /etc/ttn/networkserver/ttn.yml
+
+RUN cd /etc/ttn/networkserver; \
+ttn networkserver gen-keypair --config ./ttn.yml && \
+ttn networkserver gen-cert --config ./ttn.yml
+
+CMD ["networkserver", "--config", "/etc/ttn/networkserver/ttn.yml"]

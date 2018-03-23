@@ -1,0 +1,14 @@
+#!/bin/bash
+
+MAC=$(cat /sys/class/net/eth0/address)
+echo "MAC: ${MAC}"
+docker run -it --privileged --net=host --rm \
+ -e PI_RESET_PIN=7 \
+ -e GATEWAY_EUI="$(echo ${MAC//:} | tr /a-z/ /A-Z/)" \
+ -e ROUTER_ADDR="router.eu.thethings.network" \
+ -e GATEWAY_LAT=0 \
+ -e GATEWAY_LON=0 \
+ -e GATEWAY_ALT=0 \
+ -e GATEWAY_EMAIL="" \
+ -e GATEWAY_NAME="agile-sky-watch" \
+ sky-watch/rpi-ttn-gateway
