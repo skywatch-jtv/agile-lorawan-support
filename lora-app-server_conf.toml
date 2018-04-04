@@ -165,7 +165,7 @@ id="6d5db27e-4ce2-4b2b-b5d7-91f069397978"
   # this to the host:ip on which LoRa Server can reach LoRa App Server.
   # The port must be equal to the port configured by the 'bind' flag
   # above.
-  public_host="0.0.0.0:8001"
+  public_host="lora-app-server:8001"
 
 
   # Settings for the "external api"

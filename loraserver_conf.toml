@@ -356,7 +356,6 @@ get_downlink_data_delay="100ms"
   # TLS key file (optional)
   tls_key=""
 
-
 # Default join-server settings.
 [join_server.default]
 # hostname:port of the default join-server
