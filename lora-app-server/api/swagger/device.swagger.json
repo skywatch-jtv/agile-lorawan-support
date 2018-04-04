@@ -1,0 +1,916 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "device.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/applications/{applicationID}/devices": {
+      "get": {
+        "summary": "ListByApplicationID lists the devices by the given application ID, sorted by the name of the device.",
+        "operationId": "ListByApplicationID",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiListDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "applicationID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "description": "Max number of devices to return in the result-set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "description": "Offset of the result-set (for pagination).",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "search",
+            "description": "Search against name or DevEUI.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices": {
+      "post": {
+        "summary": "Create creates the given device.",
+        "operationId": "Create",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiCreateDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}": {
+      "get": {
+        "summary": "Get returns the device matching the given DevEUI.",
+        "operationId": "Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiGetDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
+      "delete": {
+        "summary": "Delete deletes the device matching the given DevEUI.",
+        "operationId": "Delete",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiDeleteDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
+      "put": {
+        "summary": "Update updates the device matching the given DevEUI.",
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}/activate": {
+      "post": {
+        "summary": "Activate (re)activates the device (only when ABP is set to true).",
+        "operationId": "Activate",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiActivateDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiActivateDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}/activation": {
+      "get": {
+        "summary": "GetActivation returns the current activation details of the device (OTAA and ABP).",
+        "operationId": "GetActivation",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiGetDeviceActivationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}/events": {
+      "get": {
+        "summary": "StreamEventLogs stream the device events (uplink payloads, ACKs, joins, errors).\nNote: this endpoint is intended for debugging and should not be used for building\nintegrations.",
+        "operationId": "StreamEventLogs",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/apiStreamDeviceEventLogsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}/frames": {
+      "get": {
+        "summary": "StreamFrameLogs streams the uplink and downlink frame-logs for the given DevEUI.\nNote: these are the raw LoRaWAN frames and this endpoint is intended for debugging.",
+        "operationId": "StreamFrameLogs",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/apiStreamDeviceFrameLogsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}/getRandomDevAddr": {
+      "post": {
+        "summary": "GetRandomDevAddr returns a random DevAddr taking the NwkID prefix into account.",
+        "operationId": "GetRandomDevAddr",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiGetRandomDevAddrResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    },
+    "/api/devices/{devEUI}/keys": {
+      "get": {
+        "summary": "GetKeys returns the device-keys for the given DevEUI.",
+        "operationId": "GetKeys",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiGetDeviceKeysResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
+      "delete": {
+        "summary": "DeleteKeys deletes the device-keys for the given DevEUI.",
+        "operationId": "DeleteKeys",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiDeleteDeviceKeysResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
+      "post": {
+        "summary": "CreateKeys creates the given device-keys.",
+        "operationId": "CreateKeys",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiCreateDeviceKeysResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateDeviceKeysRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
+      "put": {
+        "summary": "UpdateKeys updates the device-keys.",
+        "operationId": "UpdateKeys",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateDeviceKeysResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devEUI",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateDeviceKeysRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiActivateDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI of the device to activate."
+        },
+        "devAddr": {
+          "type": "string",
+          "description": "Hex encoded DevAddr."
+        },
+        "appSKey": {
+          "type": "string",
+          "description": "Hex encoded AppSKey."
+        },
+        "nwkSKey": {
+          "type": "string",
+          "description": "Hex encoded NwkSKey."
+        },
+        "fCntUp": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Uplink frame-counter."
+        },
+        "fCntDown": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Downlink frame-counter."
+        },
+        "skipFCntCheck": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Skip frame-counter checks (this is insecure, but could be helpful for debugging)."
+        }
+      }
+    },
+    "apiActivateDeviceResponse": {
+      "type": "object"
+    },
+    "apiCreateDeviceKeysRequest": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI of the device."
+        },
+        "deviceKeys": {
+          "$ref": "#/definitions/apiDeviceKeys"
+        }
+      }
+    },
+    "apiCreateDeviceKeysResponse": {
+      "type": "object"
+    },
+    "apiCreateDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the device (if left blank, it will be set to the DevEUI)."
+        },
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "ID of the application to which the device must be added."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the device."
+        },
+        "deviceProfileID": {
+          "type": "string",
+          "description": "DeviceProfileID attached to the device."
+        }
+      }
+    },
+    "apiCreateDeviceResponse": {
+      "type": "object"
+    },
+    "apiDataRate": {
+      "type": "object",
+      "properties": {
+        "modulation": {
+          "type": "string",
+          "description": "The used modulation (LORA or FSK)."
+        },
+        "bandwidth": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Bandwidth (in kHz)."
+        },
+        "spreadFactor": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Used spread-factor."
+        },
+        "bitrate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Bitrate (used for FSK modulation)."
+        }
+      }
+    },
+    "apiDeleteDeviceKeysResponse": {
+      "type": "object"
+    },
+    "apiDeleteDeviceResponse": {
+      "type": "object"
+    },
+    "apiDeviceKeys": {
+      "type": "object",
+      "properties": {
+        "appKey": {
+          "type": "string",
+          "description": "HEX encoded application key."
+        }
+      }
+    },
+    "apiDeviceListItem": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the device (if left blank, it will be set to the DevEUI)."
+        },
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "ID of the application to which the device must be added."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the device."
+        },
+        "deviceProfileID": {
+          "type": "string",
+          "description": "DeviceProfileID attached to the device."
+        },
+        "deviceProfileName": {
+          "type": "string",
+          "description": "Device-profile name."
+        },
+        "deviceStatusBattery": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The device battery status\n0:      The end-device is connected to an external power source\n1..254: The battery level, 1 being at minimum and 254 being at maximum\n255:    The end-device was not able to measure the battery level\n256:    The device-status is not available."
+        },
+        "deviceStatusMargin": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The device margin status\n-32..32: The demodulation SNR ration in dB\n256:     The device-status is not available."
+        },
+        "lastSeenAt": {
+          "type": "string",
+          "description": "The last time the application-server received any data from the device,\nor an empty string when the device never sent any data."
+        }
+      }
+    },
+    "apiDownlinkFrameLog": {
+      "type": "object",
+      "properties": {
+        "txInfo": {
+          "$ref": "#/definitions/apiDownlinkTXInfo",
+          "description": "TX information of the downlink."
+        },
+        "phyPayloadJSON": {
+          "type": "string",
+          "description": "LoRaWAN PHYPayload."
+        }
+      }
+    },
+    "apiDownlinkTXInfo": {
+      "type": "object",
+      "properties": {
+        "mac": {
+          "type": "string",
+          "description": "Gateway MAC."
+        },
+        "immediately": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Frame must be sent immediately."
+        },
+        "timeSinceGPSEpoch": {
+          "type": "string",
+          "description": "Transmit frame at the given time since GPS epoch."
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Transmit the frame at the given gateway internal timestamp."
+        },
+        "frequency": {
+          "type": "integer",
+          "format": "int64",
+          "description": "TX frequency (in Hz)."
+        },
+        "power": {
+          "type": "integer",
+          "format": "int32",
+          "description": "TX power (in dBm)."
+        },
+        "dataRate": {
+          "$ref": "#/definitions/apiDataRate",
+          "description": "Data-rate."
+        },
+        "codeRate": {
+          "type": "string",
+          "description": "Code rate."
+        },
+        "iPol": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Lora modulation polarization inversion."
+        },
+        "board": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The board identifier that received the uplink frame."
+        },
+        "antenna": {
+          "type": "integer",
+          "format": "int64",
+          "description": "THe antenna identifier that received the uplink frame."
+        }
+      }
+    },
+    "apiGetDeviceActivationResponse": {
+      "type": "object",
+      "properties": {
+        "devAddr": {
+          "type": "string",
+          "description": "Hex encoded DevAddr."
+        },
+        "appSKey": {
+          "type": "string",
+          "description": "Hex encoded AppSKey."
+        },
+        "nwkSKey": {
+          "type": "string",
+          "description": "Hex encoded NwkSKey."
+        },
+        "fCntUp": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Uplink frame-counter."
+        },
+        "fCntDown": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Downlink frame-counter."
+        },
+        "skipFCntCheck": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Skip frame-counter checks (this is insecure, but could be helpful for debugging)."
+        }
+      }
+    },
+    "apiGetDeviceKeysResponse": {
+      "type": "object",
+      "properties": {
+        "deviceKeys": {
+          "$ref": "#/definitions/apiDeviceKeys"
+        }
+      }
+    },
+    "apiGetDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the device (if left blank, it will be set to the DevEUI)."
+        },
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "ID of the application to which the device must be added."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the device."
+        },
+        "deviceProfileID": {
+          "type": "string",
+          "description": "DeviceProfileID attached to the device."
+        },
+        "deviceStatusBattery": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The device battery status\n0:      The end-device is connected to an external power source\n1..254: The battery level, 1 being at minimum and 254 being at maximum\n255:    The end-device was not able to measure the battery level\n256:    The device-status is not available."
+        },
+        "deviceStatusMargin": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The device margin status\n-32..32: The demodulation SNR ration in dB\n256:     The device-status is not available."
+        },
+        "lastSeenAt": {
+          "type": "string",
+          "description": "The last time the application-server received any data from the device,\nor an empty string when the device never sent any data."
+        }
+      }
+    },
+    "apiGetRandomDevAddrResponse": {
+      "type": "object",
+      "properties": {
+        "devAddr": {
+          "type": "string",
+          "description": "Hex encoded DevAddr."
+        }
+      }
+    },
+    "apiListDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "totalCount": {
+          "type": "string",
+          "format": "int64",
+          "description": "Total number of devices available within the result-set."
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiDeviceListItem"
+          },
+          "description": "Devices within this result-set."
+        }
+      }
+    },
+    "apiStreamDeviceEventLogsResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The event type."
+        },
+        "payloadJSON": {
+          "type": "string",
+          "description": "The event payload in JSON encoding."
+        }
+      }
+    },
+    "apiStreamDeviceFrameLogsResponse": {
+      "type": "object",
+      "properties": {
+        "uplinkFrames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiUplinkFrameLog"
+          },
+          "description": "Contains zero or one uplink frame."
+        },
+        "downlinkFrames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiDownlinkFrameLog"
+          },
+          "description": "Contains zero or one downlink frame."
+        }
+      }
+    },
+    "apiUpdateDeviceKeysRequest": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI of the device."
+        },
+        "deviceKeys": {
+          "$ref": "#/definitions/apiDeviceKeys"
+        }
+      }
+    },
+    "apiUpdateDeviceKeysResponse": {
+      "type": "object"
+    },
+    "apiUpdateDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "devEUI": {
+          "type": "string",
+          "description": "Hex encoded DevEUI."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the device (if left blank, it will be set to the DevEUI)."
+        },
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "ID of the application to which the device must be added."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the device."
+        },
+        "deviceProfileID": {
+          "type": "string",
+          "description": "DeviceProfileID attached to the device."
+        }
+      }
+    },
+    "apiUpdateDeviceResponse": {
+      "type": "object"
+    },
+    "apiUplinkFrameLog": {
+      "type": "object",
+      "properties": {
+        "txInfo": {
+          "$ref": "#/definitions/apiUplinkTXInfo",
+          "description": "TX information of the uplink."
+        },
+        "rxInfo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiUplinkRXInfo"
+          },
+          "description": "RX information of the uplink."
+        },
+        "phyPayloadJSON": {
+          "type": "string",
+          "description": "LoRaWAN PHYPayload."
+        }
+      }
+    },
+    "apiUplinkRXInfo": {
+      "type": "object",
+      "properties": {
+        "mac": {
+          "type": "string",
+          "description": "Gateway MAC."
+        },
+        "time": {
+          "type": "string",
+          "description": "Time when the frame was received (if available)."
+        },
+        "timeSinceGPSEpoch": {
+          "type": "string",
+          "description": "Time when the frame was received as time since GPS epoch (if available)."
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Gateway internal timestamp."
+        },
+        "rssi": {
+          "type": "integer",
+          "format": "int32",
+          "description": "RSSI."
+        },
+        "loRaSNR": {
+          "type": "number",
+          "format": "float",
+          "description": "LoRa SNR."
+        },
+        "board": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The board identifier that received the uplink frame."
+        },
+        "antenna": {
+          "type": "integer",
+          "format": "int64",
+          "description": "THe antenna identifier that received the uplink frame."
+        }
+      }
+    },
+    "apiUplinkTXInfo": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "integer",
+          "format": "int64",
+          "description": "TX frequency (in Hz)."
+        },
+        "dataRate": {
+          "$ref": "#/definitions/apiDataRate",
+          "description": "Data-rate."
+        },
+        "codeRate": {
+          "type": "string",
+          "description": "Code rate."
+        }
+      }
+    }
+  }
+}

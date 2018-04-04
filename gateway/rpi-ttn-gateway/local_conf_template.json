@@ -9,10 +9,6 @@
         "serv_enabled": true
       }
     ],
-    "ref_latitude": ${GATEWAY_LAT},
-    "ref_longitude": ${GATEWAY_LON},
-    "ref_altitude": ${GATEWAY_ALT},
-    "contact_email": "${GATEWAY_EMAIL}",
     "description": "${GATEWAY_NAME}"
   }
 }

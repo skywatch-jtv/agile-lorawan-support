@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # change reset pin assignment if configured and not default
-defaultResetPin=7
+defaultResetPin=25
 if [ -z "$PI_RESET_PIN" ]; then
   echo "PI_RESET_PIN env variable not set, reset pin assignment remains as-is (pin $defaultResetPin)"
 else
@@ -16,11 +16,11 @@ fi
 # inject the values provided by the user into the template
 envsubst < local_conf_template.json > local_conf.json
 
-echo "using global conf:"
-cat global_conf.json
+#echo "using global conf:"
+#cat global_conf.json
 
-echo "using local configuration:"
-cat local_conf.json
+#echo "using local configuration:"
+#cat local_conf.json
 
 # start script from https://github.com/ttn-zh/ic880a-gateway
 ./start.sh
