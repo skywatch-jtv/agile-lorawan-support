@@ -1,3 +1,4 @@
+// see definitions in lora.h
 #define DEVICE2
 
 #define ENABLE_LORA
@@ -25,12 +26,14 @@
 void setup(void)
 {
   SerialUSB.begin(115200);
+  delay(1000);
   SerialUSB.println("initialization started.\n");
   setup_sht31();
   setup_th02();
   setup_lora();
   gps.init();
   SerialUSB.println("All initialized.\n");
+  delay(2000);
 }
 
 
@@ -104,6 +107,7 @@ void loop(void)
       short length;
       short rssi;
       
+      /*
       memset(lora_buffer, 0, 256);
       length = lora.receivePacket(lora_buffer, 256, &rssi);
       
@@ -122,6 +126,10 @@ void loop(void)
         }
         SerialUSB.println();
       }
+      */
+    }
+    else {
+        SerialUSB.println("Unable to send packet");
     }
   }
   else {
