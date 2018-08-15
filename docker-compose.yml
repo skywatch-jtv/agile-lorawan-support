@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       # application_server.external_api
-      - 8080:8080
+      - 8081:8080
     volumes:
       - /home/pi/lorawan/lora-app-server_conf.toml:/etc/lora-app-server/lora-app-server.toml:ro
     depends_on:
@@ -15,6 +15,11 @@ services:
       - redis
       - mosquitto
       - loraserver
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
   loraserver:
     build:
@@ -26,6 +31,11 @@ services:
       - postgres
       - redis
       - mosquitto
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
   postgres-appsrv:
     image: postgres:alpine
@@ -36,6 +46,11 @@ services:
       - POSTGRES_PASSWORD=loraserver_as
       - POSTGRES_USER=loraserver_as
       - POSTGRES_DB=loraserver_as
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
   postgres:
     image: postgres:alpine
@@ -46,6 +61,11 @@ services:
       - POSTGRES_PASSWORD=loraserver
       - POSTGRES_USER=loraserver
       - POSTGRES_DB=loraserver
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
   redis:
     build:
@@ -53,6 +73,11 @@ services:
       dockerfile: Dockerfile
     volumes:
       - redis_data:/data
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
   mosquitto:
     build:
@@ -60,6 +85,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "1883:1883"  # Note: your MQTT broker should use authentication in production environments
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
   
   bridge:
     build:
@@ -69,6 +99,11 @@ services:
       - /home/pi/lorawan/lora-gateway-bridge_conf.toml:/etc/lora-gateway-bridge/lora-gateway-bridge.toml
     depends_on:
       - mosquitto
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
   forwarder:
     build: 
@@ -84,6 +119,11 @@ services:
     privileged: true
     depends_on:
       - bridge
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
 
 volumes:
   postgres_data:
