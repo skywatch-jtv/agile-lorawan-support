@@ -37,6 +37,20 @@ services:
         mode: non-blocking
         max-buffer-size: 1m
 
+  bridge:
+    build:
+      context:    lora-gateway-bridge
+      dockerfile: Dockerfile
+    volumes:
+      - /home/pi/lorawan/lora-gateway-bridge_conf.toml:/etc/lora-gateway-bridge/lora-gateway-bridge.toml
+    depends_on:
+      - mosquitto
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
+
   postgres-appsrv:
     image: postgres:alpine
     volumes:
@@ -91,20 +105,6 @@ services:
         mode: non-blocking
         max-buffer-size: 1m
   
-  bridge:
-    build:
-      context:    gateway/lora-gateway-bridge
-      dockerfile: Dockerfile
-    volumes:
-      - /home/pi/lorawan/lora-gateway-bridge_conf.toml:/etc/lora-gateway-bridge/lora-gateway-bridge.toml
-    depends_on:
-      - mosquitto
-    logging:
-      driver: journald
-      options:
-        mode: non-blocking
-        max-buffer-size: 1m
-
   forwarder:
     build: 
       context:    gateway/rpi-ttn-gateway
