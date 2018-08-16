@@ -51,30 +51,20 @@ services:
         mode: non-blocking
         max-buffer-size: 1m
 
-  postgres-appsrv:
-    image: postgres:alpine
+  packet-forwarder:
+    build: 
+      context:    packet-forwarder
+      dockerfile: Dockerfile
     volumes:
-      - postgres-appsrv_data:/data
-      - postgres-appsrv_sql_data:/var/lib/postgresql/data
+      - forwarder_cgroups:/sys/fs/cgroup
     environment:
-      - POSTGRES_PASSWORD=loraserver_as
-      - POSTGRES_USER=loraserver_as
-      - POSTGRES_DB=loraserver_as
-    logging:
-      driver: journald
-      options:
-        mode: non-blocking
-        max-buffer-size: 1m
-
-  postgres:
-    image: postgres:alpine
-    volumes:
-      - postgres_data:/data
-      - postgres_sql_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=loraserver
-      - POSTGRES_USER=loraserver
-      - POSTGRES_DB=loraserver
+      PI_RESET_PIN: 7
+      GATEWAY_EUI: "010203"
+      ROUTER_ADDR: bridge
+      GATEWAY_NAME: "forwarder"
+    privileged: true
+    depends_on:
+      - bridge
     logging:
       driver: journald
       options:
@@ -105,20 +95,30 @@ services:
         mode: non-blocking
         max-buffer-size: 1m
   
-  forwarder:
-    build: 
-      context:    gateway/rpi-ttn-gateway
-      dockerfile: Dockerfile
+  postgres-appsrv:
+    image: postgres:alpine
     volumes:
-      - forwarder_cgroups:/sys/fs/cgroup
+      - postgres-appsrv_data:/data
+      - postgres-appsrv_sql_data:/var/lib/postgresql/data
     environment:
-      PI_RESET_PIN: 7
-      GATEWAY_EUI: "010203"
-      ROUTER_ADDR: bridge
-      GATEWAY_NAME: "forwarder"
-    privileged: true
-    depends_on:
-      - bridge
+      - POSTGRES_PASSWORD=loraserver_as
+      - POSTGRES_USER=loraserver_as
+      - POSTGRES_DB=loraserver_as
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
+
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/data
+      - postgres_sql_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=loraserver
+      - POSTGRES_USER=loraserver
+      - POSTGRES_DB=loraserver
     logging:
       driver: journald
       options:
