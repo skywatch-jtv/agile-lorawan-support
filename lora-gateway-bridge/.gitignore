@@ -1,0 +1,13 @@
+# hidden files
+.*
+
+# configuration files
+*.toml
+
+# binaries
+dist/
+build/
+docs/public/
+
+# dependencies
+vendor/
