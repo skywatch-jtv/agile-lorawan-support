@@ -1,0 +1,23 @@
+# hidden files
+.*
+
+# Vagrant
+Vagrantfile
+
+# logs
+*.log
+
+# configuration
+*.toml
+
+# dependencies
+vendor/
+
+# certs
+certs/
+
+# builds
+dist/
+build/
+internal/migrations/
+docs/public/
