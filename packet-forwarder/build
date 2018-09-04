@@ -1,0 +1,1 @@
+docker build --pull --force-rm -t registry.int.sky-watch.com:5000/3rdpart/ttn-packet-forwarder:rpi .
