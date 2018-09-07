@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build dockerfile",
+            "type": "shell",
+            "command": "docker build --pull -t dev ${workspaceFolder}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Postgres",
+            "type": "shell",
+            "command": "docker build -f Dockerfile-postgres -t app_postgres . && docker run --rm -p 5432:5432 --name backup_app_postgres -e POSTGRES_PASSWORD=postgres -d app_postgres",
+            "problemMatcher": []
+        }
+    ]
+}

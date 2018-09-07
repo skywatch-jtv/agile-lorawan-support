@@ -1,6 +1,34 @@
 version: '2'
 
 services:
+  backup_app:
+    image: local/backup_app
+    build:
+      context: backup_app
+      dockerfile: Dockerfile
+    depends_on:
+      - backup_app_postgres
+      - mosquitto
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
+
+  backup_app_postgres:
+    image: local/backup_app_postgres
+    build:
+      context: backup_app
+      dockerfile: Dockerfile-postgres
+    volumes:
+      - backup_app_postgres_data:/data
+      - backup_app_postgres_sql_data:/var/lib/postgresql/data
+    logging:
+      driver: journald
+      options:
+        mode: non-blocking
+        max-buffer-size: 1m
+
   lora-app-server:
     image: local/lora-app-server
     build:
@@ -97,7 +125,7 @@ services:
       options:
         mode: non-blocking
         max-buffer-size: 1m
-  
+
   postgres-appsrv:
     image: postgres:9.6-alpine
     volumes:
@@ -130,8 +158,10 @@ services:
 
 volumes:
   postgres_data:
-  postgres-appsrv_data:
   postgres_sql_data:
+  postgres-appsrv_data:
   postgres-appsrv_sql_data:
+  backup_app_postgres_data:
+  backup_app_postgres_sql_data:
   redis_data:
   forwarder_cgroups:
