@@ -32,7 +32,7 @@ services:
   lora-app-server:
     image: local/lora-app-server
     build:
-      context:    ../brocaar/lora-app-server
+      context:    images/lora-app-server
       dockerfile: Dockerfile
     ports:
       # application_server.external_api
@@ -53,7 +53,7 @@ services:
   loraserver:
     image: local/loraserver
     build:
-      context:    ../brocaar/loraserver
+      context:    images/loraserver
       dockerfile: Dockerfile
     volumes:
       - ./loraserver_conf.toml:/etc/loraserver/loraserver.toml:ro
@@ -70,7 +70,7 @@ services:
   bridge:
     image: local/lora-gateway-bridge
     build:
-      context:    ../brocaar/lora-gateway-bridge
+      context:    images/lora-gateway-bridge
       dockerfile: Dockerfile
     volumes:
       - ./lora-gateway-bridge_conf.toml:/etc/lora-gateway-bridge/lora-gateway-bridge.toml
@@ -83,6 +83,7 @@ services:
         max-buffer-size: 1m
 
   packet-forwarder:
+    command: sh -c "while true; do ./cmd.sh; sleep 2; done"
     image: registry.int.sky-watch.com:5000/3rdpart/ttn-packet-forwarder:rpi
     build:
       context: packet-forwarder
