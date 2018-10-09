@@ -1,0 +1,12 @@
+[Unit]
+Description=Complete LoRaWAN stack, utilizing LoRaServer
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/lorawan
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target

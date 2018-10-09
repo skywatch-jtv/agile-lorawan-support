@@ -1,6 +1,6 @@
 
 mqtt_connection = {
-    'host': 'mosquitto',
+    'host': 'mqtt',
     'port': 1883,
     'keepalive': 60
 }
@@ -10,6 +10,6 @@ postgresql = {
     'database': 'postgres',
     'user': 'postgres',
     'password': 'postgres',
-    'host': 'backup_app_postgres',
+    'host': 'postgres',
 }
 

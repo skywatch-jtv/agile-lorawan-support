@@ -69,11 +69,7 @@ def on_message(client, userdata, msg):
             longitude=longitude,
             altitude=altitude,
         ))
-    with psycopg2.connect(
-        dbname='postgres',
-        user='postgres',
-        password='postgres',
-        host='localhost') as conn:
+    with psycopg2.connect(**config.postgresql) as conn:
         with conn.cursor() as cur:
             cur.execute('''INSERT INTO sensordata(
                 deviceName,
@@ -100,11 +96,7 @@ def on_message(client, userdata, msg):
 
 
 # Connect to database
-with psycopg2.connect(
-    dbname='postgres',
-    user='postgres',
-    password='postgres',
-    host='localhost') as conn:
+with psycopg2.connect(**config.postgresql) as conn:
     with conn.cursor() as cur:
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')

@@ -1,11 +1,31 @@
 version: '2'
 
 services:
+#  grafana:
+#    image: grafana-xxl
+#    depends_on:
+#      - backup_app_postgres
+#    links:
+#      - backup_app_postgres:postgres
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - grafana_storage:/var/lib/grafana
+#    logging:
+#      driver: journald
+#      options:
+#        mode: non-blocking
+#        max-buffer-size: 1m
+
   backup_app:
+    command: sh -c "sleep 30; python -m app"
     image: local/backup_app
     build:
       context: backup_app
       dockerfile: Dockerfile
+    links:
+      - backup_app_postgres:postgres
+      - mosquitto:mqtt
     depends_on:
       - backup_app_postgres
       - mosquitto
@@ -20,6 +40,8 @@ services:
     build:
       context: backup_app
       dockerfile: Dockerfile-postgres
+    ports:
+      - 5432:5432
     volumes:
       - backup_app_postgres_data:/data
       - backup_app_postgres_sql_data:/var/lib/postgresql/data
@@ -95,6 +117,8 @@ services:
       GATEWAY_EUI: "0000000000010203"
       ROUTER_ADDR: bridge
       GATEWAY_NAME: "forwarder"
+    extra_hosts:
+      - "google.com:127.0.0.1"
     privileged: true
     depends_on:
       - bridge
@@ -166,3 +190,4 @@ volumes:
   backup_app_postgres_sql_data:
   redis_data:
   forwarder_cgroups:
+  grafana_storage:
